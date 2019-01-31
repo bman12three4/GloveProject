@@ -103,9 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-
-Unity/Glove Project/Assets/
-
 Unity/Glove Project/[Ll]ibrary/
 Unity/Glove Project/[Tt]emp/
 Unity/Glove Project/[Oo]bj/
