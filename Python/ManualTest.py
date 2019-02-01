@@ -1,29 +1,14 @@
 import time
+import os
+import sys
 
-writeFile = open("adc.txt", "a")
-readFile = open("adc.txt", "r")
+values = 254
 
-values = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+if not os.path.exists('pipe_test'):
+    os.mkfifo('pipe_test')
 
-
-writeFile.truncate(0)
-for x in range(16):
-    writeFile.write(str((values[x])))
-    writeFile.write("\n")
-    writeFile.flush()
-
-print("Beginning Loop")
-
-while (True):
-    lines = readFile.readlines()
-    writeFile.truncate(0)
-    for x in range(16):
-        writeFile.write(str((values[x])))
-        writeFile.write('\n')
-        writeFile.flush()
-
-        if (values[x] > 359):
-            values[x] = 0
-        #print("Update Complete")
+pipeout = os.open('pipe_test', os.O_WRONLY)
+while True :
+    os.write(pipeout, values)
     
     
