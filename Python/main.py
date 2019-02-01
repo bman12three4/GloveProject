@@ -1,5 +1,5 @@
 import time
-import AD7490
+from AD7490 import AD7490
 
 #def...
 

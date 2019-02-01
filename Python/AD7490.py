@@ -2,7 +2,7 @@ import time
 import Adafruit_GPIO as GPIO
 import Adafruit_GPIO.FT232H as FT232H
  
-class AD7490(object):
+class AD7490():
     def __init__(self):
         # Temporarily disable FTDI serial drivers.
         self.FT232H.use_FT232H()
