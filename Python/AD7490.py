@@ -18,7 +18,7 @@ class AD7490():
         self.spi.write(data)
         return self.spi.read()
 
-    def read(self, channel):
+    def readChannel(self, channel):
         return ((read(self) >> channel) & 0x01)
     
 
