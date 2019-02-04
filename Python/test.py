@@ -2,8 +2,8 @@ import time, os, errno
 
 bufferSize = 100
 
-pipein = "/home/byron/Desktop/GloveProject/GloveProject/pipe_test"
-#pipein = "pipe_test"
+#pipein = "/home/byron/Desktop/GloveProject/GloveProject/pipe_test"
+pipein = "/tmp/glove"
 
 i = 0
 

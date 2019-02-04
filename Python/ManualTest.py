@@ -4,7 +4,7 @@ import sys
 
 values = 254
 
-path = "pipe_test"
+path = "/tmp/glove"
     
 pipein = open(path, 'r')
 
