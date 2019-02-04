@@ -4,11 +4,10 @@ import sys
 
 values = 254
 
-if not os.path.exists('pipe_test'):
-    os.mkfifo('pipe_test')
+path = "pipe_test"
+    
+pipein = open(path, 'r')
 
-pipeout = os.open('pipe_test', os.O_WRONLY)
-while True :
-    os.write(pipeout, values)
-    
-    
+while 1:
+    line = pipein.readline()[:-1]
+    print(line)

@@ -2,22 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System;
+using System.IO;
+using System.IO.Pipes;
+
 public class FileTestController : MonoBehaviour
 {
+
+    NamedPipeClientStream client;
+
+    StreamReader reader;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        client =  new NamedPipeClientStream(".", "/home/byron/Desktop/GloveProject/GloveProject/pipe_test", PipeDirection.In);
+        client.Connect();
+        reader = new StreamReader(client);
     }
 
     // Update is called once per frame
     void Update()
     {
-        string[] lines = System.IO.File.ReadAllLines("/home/byron/Desktop/GloveProject/GloveProject/adc.txt");
-        Debug.Log(lines[0]);
+        string line = reader.ReadLine();
+        Debug.Log(line);
 
-        transform.eulerAngles = new Vector3(float.Parse(lines[0]), 0, 0);
-        //transform.eulerAngles = new Vector3(90, 0, 0);
+        transform.eulerAngles = new Vector3(float.Parse(line), 0, 0);
 
     }
 }
