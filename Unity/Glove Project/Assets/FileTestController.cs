@@ -22,6 +22,18 @@ public class FileTestController : MonoBehaviour
 
     }
 
+
+/*
+
+
+    2 5 8 11
+    1 4 7 10
+    0 3 6 9
+  13
+  12
+ */
+
+
     // Update is called once per frame
     void Update()
     {
@@ -29,14 +41,15 @@ public class FileTestController : MonoBehaviour
 
         if (line != null){
             String[] values = line.Split(',');
-            //Debug.Log(values[0]);
 
-            this.gameObject.transform.GetChild(0).localEulerAngles = new Vector3(float.Parse(90+values[0]), 0, 0);
-            this.gameObject.transform.GetChild(0).GetChild(0).localEulerAngles = new Vector3(float.Parse(values[1]), 0, 0);
-            this.gameObject.transform.GetChild(0).GetChild(0).GetChild(0).localEulerAngles = new Vector3(float.Parse(values[2]), 0, 0);
-            
+            for (int i = 0; i < this.gameObject.transform.childCount; i++){
+                this.gameObject.transform.GetChild(i).localEulerAngles = new Vector3(90 + float.Parse(values[3*i]), 0, 0);
+                this.gameObject.transform.GetChild(i).GetChild(0).localEulerAngles = new Vector3(float.Parse(values[3*i + 1]), 0, 0);
+                if (i <4)
+                    this.gameObject.transform.GetChild(i).GetChild(0).GetChild(0).localEulerAngles = new Vector3(float.Parse(values[3*i +2]), 0, 0);
+            }
+
         }
-
 
     }
 }
