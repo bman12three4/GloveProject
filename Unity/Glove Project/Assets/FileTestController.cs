@@ -18,7 +18,7 @@ public class FileTestController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        client =  new NamedPipeClientStream(".", "/home/byron/Desktop/GloveProject/GloveProject/pipe_test", PipeDirection.In);
+        client =  new NamedPipeClientStream(".", "/tmp/glove", PipeDirection.In);
         client.Connect();
         reader = new StreamReader(client);
     }
