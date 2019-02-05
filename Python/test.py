@@ -6,14 +6,20 @@ pipein = "/home/byron/Desktop/GloveProject/GloveProject/pipe_test"
 #pipein = "pipe_test"
 
 i = 0
+j = 0
+k = 0
 
 while 1:
     try:
         pipe = os.open(pipein, os.O_WRONLY | os.O_NONBLOCK)
-        os.write(pipe, b'%i\n' % i)
+        os.write(pipe, b'%i,%i,%i\n' % (i, j, k))
         i+=1
+        j+=1
+        k+=1
         if i > 360:
             i = 0
+            j = 0
+            k = 0
         os.close(pipe)
         time.sleep(0.05)
     except OSError as err:

@@ -5,10 +5,12 @@ using UnityEngine;
 using System;
 using System.IO;
 using System.IO.Pipes;
+using System.Threading;
 
 public class FileTestController : MonoBehaviour
 {
 
+    //public int channel = 0;
     NamedPipeClientStream client;
 
     StreamReader reader;
@@ -25,9 +27,14 @@ public class FileTestController : MonoBehaviour
     void Update()
     {
         string line = reader.ReadLine();
-        Debug.Log(line);
 
-        transform.eulerAngles = new Vector3(float.Parse(line), 0, 0);
+        if (line != null){
+            String[] values = line.Split(',');
+            Debug.Log(values[0]);
+            transform.eulerAngles = new Vector3(float.Parse(values[0]), 0, 0);
+            this.gameObject.transform.GetChild(0).transform.eulerAngles = new Vector3(float.Parse(values[1]), 0, 0);
+        }
+
 
     }
 }
