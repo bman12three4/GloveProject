@@ -9,8 +9,6 @@ using System.Threading;
 
 public class FileTestController : MonoBehaviour
 {
-
-    //public int channel = 0;
     NamedPipeClientStream client;
 
     StreamReader reader;
@@ -21,6 +19,7 @@ public class FileTestController : MonoBehaviour
         client =  new NamedPipeClientStream(".", "/tmp/glove", PipeDirection.In);
         client.Connect();
         reader = new StreamReader(client);
+
     }
 
     // Update is called once per frame
@@ -30,9 +29,12 @@ public class FileTestController : MonoBehaviour
 
         if (line != null){
             String[] values = line.Split(',');
-            Debug.Log(values[0]);
-            transform.eulerAngles = new Vector3(float.Parse(values[0]), 0, 0);
-            this.gameObject.transform.GetChild(0).transform.eulerAngles = new Vector3(float.Parse(values[1]), 0, 0);
+            //Debug.Log(values[0]);
+
+            this.gameObject.transform.GetChild(0).localEulerAngles = new Vector3(float.Parse(90+values[0]), 0, 0);
+            this.gameObject.transform.GetChild(0).GetChild(0).localEulerAngles = new Vector3(float.Parse(values[1]), 0, 0);
+            this.gameObject.transform.GetChild(0).GetChild(0).GetChild(0).localEulerAngles = new Vector3(float.Parse(values[2]), 0, 0);
+            
         }
 
 
