@@ -14,9 +14,13 @@ class AD7490():
     
     def read(self):
         #data = 0b1000001100110000 #Basic data word, sets power functions to normal, goes to address 0
-        data = 0x8330
-        self.spi.write(data)
-        return self.spi.read()
+        byte1 = 0b10000011
+        byte2 = 0b00110000 
+        self.spi.write(byte1)
+
+        data1 = self.spi.write(byte2)
+        data2 = self.spi.read()
+        return [data1, data2]
 
     def readChannel(self, channel):
         return ((read(self) >> channel) & 0x01)
