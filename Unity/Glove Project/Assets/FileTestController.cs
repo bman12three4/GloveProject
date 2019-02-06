@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Diagnostics;
+using System.Threading.Tasks;
+
 using System;
 using System.IO;
 using System.IO.Pipes;
@@ -19,7 +22,6 @@ public class FileTestController : MonoBehaviour
         client =  new NamedPipeClientStream(".", "/tmp/glove", PipeDirection.In);
         client.Connect();
         reader = new StreamReader(client);
-
     }
 
 

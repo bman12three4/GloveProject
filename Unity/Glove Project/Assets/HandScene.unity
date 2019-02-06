@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4511333, g: 0.49973387, b: 0.56757087, a: 1}
+  m_IndirectSpecularColor: {r: 0.45113337, g: 0.49973398, b: 0.56757104, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -219,6 +219,7 @@ GameObject:
   - component: {fileID: 96523623}
   - component: {fileID: 96523627}
   - component: {fileID: 96523628}
+  - component: {fileID: 96523629}
   m_Layer: 0
   m_Name: Hand
   m_TagString: Untagged
@@ -325,6 +326,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a60c7ade5ae5e1e3ca2a9c0e4e0dfc97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &96523629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96523622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db32a1a9092547558d217cf3c1bb51d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &349870342
