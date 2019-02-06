@@ -13,16 +13,21 @@ class AD7490():
         self.spi = FT232H.SPI(ft232h, cs=8, max_speed_hz=3000000, mode=3, bitorder=FT232H.MSBFIRST)
     
     def read(self):
-        #data = 0b1000001100110000 #Basic data word, sets power functions to normal, goes to address 0
-        byte1 = 0b10000011
-        byte2 = 0b00110000 
-        self.spi.write(byte1)
-
-        data1 = self.spi.write(byte2)
-        data2 = self.spi.read()
-        return [data1, data2]
+        #tbd, probably a loop of readChannel()
 
     def readChannel(self, channel):
-        return ((read(self) >> channel) & 0x01)
+        #data = 0b1000001100110000 #Basic data word, sets power functions to normal, goes to address 0
+        byte1 = 0b10000011 | channel << 2
+        byte2 = 0b00110000 
+
+        self.spi.write(byte1)           #Write the first byte (read nothing)
+        data1 = self.spi.write(byte2)   #Write the second byte (read the first response byte)
+        data2 = self.spi.read()         #Read the second response byte
+
+        print(data1)                    #Print first byte (TESTING)
+        print(data2)                    #Print second byte (TESTING)
+
+        return [data1, data2]           #Return both bytes
+
     
 
