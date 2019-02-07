@@ -13,12 +13,12 @@ public class StartPython : MonoBehaviour
         ProcessStartInfo start = new ProcessStartInfo();
         start.FileName = "/usr/bin/python";
 
-        //string path = Application.dataPath + "/Python/main.py";
+        string path = Application.dataPath + "/Python/main.py";
 
-        //UnityEngine.Debug.Log(path);
+        UnityEngine.Debug.Log(path);
 
-        start.Arguments = string.Format("{0} {1}", "/Users/byron.lathi/Desktop/School/GloveProject/GloveProject/Python/main.py", "");
-        //start.Arguments = string.Format("{0} {1}", path, "");
+        //start.Arguments = string.Format("{0} {1}", "/Users/byron.lathi/Desktop/School/GloveProject/GloveProject/Python/main.py", "");
+        start.Arguments = string.Format("{0} {1}", path, "");
         start.UseShellExecute = true;
         start.UseShellExecute = true;
         start.RedirectStandardOutput = false;
