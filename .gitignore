@@ -103,12 +103,12 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-Unity/Glove Project/[Ll]ibrary/
-Unity/Glove Project/[Tt]emp/
-Unity/Glove Project/[Oo]bj/
-Unity/Glove Project/[Bb]uild/
-Unity/Glove Project/[Bb]uilds/
-Unity/Glove Project/[Ll]ogs/
+Unity/GloveProject/[Ll]ibrary/
+Unity/GloveProject/[Tt]emp/
+Unity/GloveProject/[Oo]bj/
+Unity/GloveProject/[Bb]uild/
+Unity/GloveProject/[Bb]uilds/
+Unity/GloveProject/[Ll]ogs/
 
 # Never ignore Asset meta data
 ![Aa]ssets/**/*.meta
