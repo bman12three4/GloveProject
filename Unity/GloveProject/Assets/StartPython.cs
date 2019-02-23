@@ -11,6 +11,7 @@ public class StartPython : MonoBehaviour
     void Start()
     {
         ProcessStartInfo start = new ProcessStartInfo();
+        
         start.FileName = "/usr/bin/python";
 
         string path = Application.dataPath + "/Python/main.py";
@@ -30,4 +31,6 @@ public class StartPython : MonoBehaviour
     {
         
     }
+
+    
 }
