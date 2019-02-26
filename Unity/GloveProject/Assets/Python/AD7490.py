@@ -34,13 +34,17 @@ class adc():
         return values
 
     def readChannel(self, channel):
-        # data = 0b1000001100010000 #Basic data word, sets power functions to normal, goes to address 0, range is 2x
-        byte1 = 0b10000011 | (channel << 2)
+        #Basic data word, sets power functions to normal, goes to address 0, range is 2x
+        byte1 = 0b10000011 | (channel << 2) # This shifts the address to the proper position
         byte2 = 0b00010000
 
+        #Write both bytes to the device
         self.spi.write([byte1, byte2])
 
+        #Read two butes from the device
         ret = self.spi.read(2)
+
+        #Turn those two bytes into a short, then and with 4095 to remove address data 
         response = struct.unpack('>H', ret)[0] & 4095
 
         return response
