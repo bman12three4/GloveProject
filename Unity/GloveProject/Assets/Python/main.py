@@ -11,24 +11,28 @@ data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 adc = AD7490.adc()
 
+def getScaledChannel(channel):
+    return (adc.readChannel(channel)*(360*.7)/(4095) -126)
+
+
 while (True):
     # Set the first joints to all be the same angle
-    data[0] = (adc.readChannel(1)*(360*.7)/(4095) -126)
-    data[3] = (adc.readChannel(1)*(360*.7)/(4095) -126)
-    data[6] = (adc.readChannel(1)*(360*.7)/(4095) -126)
-    data[9] = (adc.readChannel(1)*(360*.7)/(4095) -126)
+    data[0] = getScaledChannel(1)
+    data[3] = getScaledChannel(1)
+    data[6] = getScaledChannel(1)
+    data[9] = getScaledChannel(1)
 
     # Set the value of the second joints
-    data[1] = (adc.readChannel(0)*(360*.7)/(4095) -126)
-    #data[4]
-    #data[10]
+    data[1] = getScaledChannel(0)
+    data[4] = getScaledChannel(3)
     #data[7]
+    #data[10]
 
     # Set the value of the third joints
-    #data[2]
+    data[2] = getScaledChannel(2)
     #data[5]
-    #data[11]
     #data[8]
+    #data[11]
 
     # Set the value of the thim joints
     #data[12]
