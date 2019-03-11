@@ -2,8 +2,6 @@ import time
 import AD7490
 from pipes import Pipe
 
-#CAl value
-
 
 pipe = Pipe()
 
@@ -30,11 +28,11 @@ while (True):
 
     # Set the value of the third joints
     data[2] = getScaledChannel(2)
-    #data[5]
+    data[5] = getScaledChannel(5)
     #data[8]
     #data[11]
 
-    # Set the value of the thim joints
+    # Set the value of the thumb joints
     #data[12]
     #data[13]
     
