@@ -5,6 +5,9 @@ class Pipe():
     #Location of the pipe
     PATH = "/tmp/glove"
 
+    def __init__(self):
+        if not os.path.exists(self.PATH):
+            os.mkfifo(self.PATH)
     
     #The write funcion writes the values in the array to the pipe with commas delimiting.
 
