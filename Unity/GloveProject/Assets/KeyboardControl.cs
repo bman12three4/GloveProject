@@ -5,7 +5,7 @@ using UnityEngine;
 public class KeyboardControl : MonoBehaviour
 {
 
-    float RotateSpeed = 30f;
+    float MoveSpeed = 30f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,20 +21,20 @@ public class KeyboardControl : MonoBehaviour
         //q-e is z axis
         //a-d is y axis
 
+        if (Input.GetKey(KeyCode.A))
+            transform.Translate(-Vector3.right * MoveSpeed * Time.deltaTime);
+        else if (Input.GetKey(KeyCode.D))
+            transform.Translate(Vector3.right * MoveSpeed * Time.deltaTime);
+
         if (Input.GetKey(KeyCode.W))
-            transform.Rotate(-Vector3.right * RotateSpeed * Time.deltaTime);
+            transform.Translate(Vector3.forward * MoveSpeed * Time.deltaTime);
         else if (Input.GetKey(KeyCode.S))
-            transform.Rotate(Vector3.right * RotateSpeed * Time.deltaTime);
+            transform.Translate(-Vector3.forward * MoveSpeed * Time.deltaTime);
 
         if (Input.GetKey(KeyCode.Q))
-            transform.Rotate(Vector3.forward * RotateSpeed * Time.deltaTime);
+            transform.Translate(Vector3.up * MoveSpeed * Time.deltaTime);
         else if (Input.GetKey(KeyCode.E))
-            transform.Rotate(-Vector3.forward * RotateSpeed * Time.deltaTime);
-
-        if (Input.GetKey(KeyCode.A))
-            transform.Rotate(-Vector3.up * RotateSpeed * Time.deltaTime);
-        else if (Input.GetKey(KeyCode.D))
-            transform.Rotate(Vector3.up * RotateSpeed * Time.deltaTime);
+            transform.Translate(-Vector3.up * MoveSpeed * Time.deltaTime);
 
 
 
