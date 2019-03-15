@@ -26,13 +26,14 @@ public class FileTestController : MonoBehaviour
 
 
 /*
+    This is         this is
+    adc pin         data[]
 
-
-    2 5 8 11
-    1 4 7 10
-    0 3 6 9
-  13
-  12
+    2 5 8 6         2 5 8 11
+    0 3 7 4         1 4 7 10
+    1 1 1 1         0 3 6 9
+  10              13
+  9               12
  */
 
 
