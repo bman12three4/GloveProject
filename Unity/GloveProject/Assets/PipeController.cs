@@ -10,7 +10,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Threading;
 
-public class FileTestController : MonoBehaviour
+public class PipeController : MonoBehaviour
 {
     NamedPipeClientStream client;
 
