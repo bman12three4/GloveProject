@@ -3,22 +3,20 @@ import time, os, errno
 class Pipe():
 
     #Location of the pipe
-    PATH = "/tmp/glove"
-
-    def __init__(self):
-        if not os.path.exists(self.PATH):
-            os.mkfifo(self.PATH)
+    WRPATH = "/tmp/glove"
+    RDPATH = "/tmp/kinect"
     
     #The write funcion writes the values in the array to the pipe with commas delimiting.
 
-    def write(self, dList):
+    def write(self, dList, path):
+
         data = b''                                  #create the binary string
         for position in range(len(dList)):          #for each value in the array
             data += b'%i,' % (dList[position])      #Add that value and a comma to the binary string
         data += b'\n'                               #At the end of the loop add a newline.
 
         try:                                        #Open up the pipe in write only, nonblocking mode 
-            pipe = os.open(self.PATH, os.O_WRONLY | os.O_NONBLOCK) 
+            pipe = os.open(path, os.O_WRONLY | os.O_NONBLOCK) 
             os.write(pipe, data)                    #write the data to the pipe
             os.close(pipe)                          #close the pipe
             time.sleep(0.05)                        #sleep for 1/20 seconds. decrease this for faster refresh rate
@@ -27,4 +25,8 @@ class Pipe():
                 pass
             else:
                 raise err
+
+    def read(self, path):
+        with open(path) as pipe:
+            return pipe.read()
 

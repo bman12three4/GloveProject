@@ -1,16 +1,18 @@
 import time
+import subprocess
 import AD7490
 from pipes import Pipe
 
 
 pipe = Pipe()
 
-data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 adc = AD7490.adc()
 
+
 def getScaledChannel(channel):
-    return (adc.readChannel(channel)*(360*.7)/(4095) -126)
+    return (adc.readChannel(channel)*(360*.7)/(4095) - 126)
 
 
 while (True):
@@ -35,9 +37,15 @@ while (True):
     # Set the value of the thumb joints
     data[12] = getScaledChannel(9)
     data[13] = getScaledChannel(10)
-    
-    pipe.write(data)
-    time.sleep(1/60)
 
-    
-    
+    #subprocess.Popen("python Unity/GloveProject/Assets/Python/handTracking.py ",shell=False)
+    kinectString = pipe.read("/tmp/kinect").split(",")
+    #print(kinectString)
+
+    if kinectString[0]:
+        data[16] = int(kinectString[0])
+        data[17] = int(kinectString[1])
+
+    print(data)
+    pipe.write(data, "/tmp/glove")
+    time.sleep(1/60)
