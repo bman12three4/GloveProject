@@ -5,4 +5,4 @@ pipe = Pipe()
 data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 while True:
-    pipe.write(data)
+    pipe.write(data, '/tmp/kinect')

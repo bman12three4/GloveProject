@@ -27,7 +27,7 @@ public class ButtonAction : MonoBehaviour
 
     }
 
-    void OnCollisionEnter(Collision col)
+    void OnTriggerEnter(Collider col)
     {
         if (red)
         {

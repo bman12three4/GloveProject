@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+using System;
+using System.IO;
+using System.IO.Pipes;
+using System.Threading;
+
 public class NewBehaviourScript : MonoBehaviour
 {
 
-    amedPipeClientStream client;
+    NamedPipeClientStream client;
 
     StreamReader reader;
 
