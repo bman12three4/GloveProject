@@ -2,11 +2,13 @@ from freenect import sync_get_depth as get_depth #Uses freenect to get depth inf
 import numpy as np #Imports NumPy
 import cv,cv2 #Uses both of cv and cv2
 import pygame #Uses pygame
+print ("Pygame init")
 #The libaries below are used for mouse manipulation
 from Xlib import X, display
 import Xlib.XK
 import Xlib.error
 import Xlib.ext.xtest
+print("Xlib init")
 import subprocess
 import sys
 import time
@@ -15,11 +17,47 @@ from pipes import Pipe
 
 pipe = Pipe()
 
-moves = [0, 0]
+moves = [0, 0, 0]
 
 
 #userName = "unknown"
 constList = lambda length, val: [val for _ in range(length)] #Gives a list of size length filled with the variable val. length is a list and val is dynamic
+
+print("all init")
+
+def make_gamma():
+    """
+    Create a gamma table
+    """
+    num_pix = 2048 # there's 2048 different possible depth values
+    npf = float(num_pix)
+    _gamma = np.empty((num_pix, 3), dtype=np.uint16)
+    for i in xrange(num_pix):
+        v = i / npf
+        v = pow(v, 3) * 6
+        pval = int(v * 6 * 256)
+        lb = pval & 0xff
+        pval >>= 8
+        if pval == 0:
+            a = np.array([255, 255 - lb, 255 - lb], dtype=np.uint8)
+        elif pval == 1:
+            a = np.array([255, lb, 0], dtype=np.uint8)
+        elif pval == 2:
+            a = np.array([255 - lb, lb, 0], dtype=np.uint8)
+        elif pval == 3:
+            a = np.array([255 - lb, 255, 0], dtype=np.uint8)
+        elif pval == 4:
+            a = np.array([0, 255 - lb, 255], dtype=np.uint8)
+        elif pval == 5:
+            a = np.array([0, 0, 255 - lb], dtype=np.uint8)
+        else:
+            a = np.array([0, 0, 0], dtype=np.uint8)
+
+        _gamma[i] = a
+    return _gamma
+
+
+gamma = make_gamma()
 
 """
 This class is a less extensive form of regionprops() developed by MATLAB. It finds properties of contours and sets them to fields
@@ -109,11 +147,13 @@ def hand_tracker():
     YELLOW = (255,255,0)
     pygame.init() #Initiates pygame
     xSize,ySize = 640,480 #Sets size of window
+    disp_size = (640, 480)
     screen = pygame.display.set_mode((xSize,ySize),pygame.RESIZABLE) #creates main surface
     screenFlipped = pygame.display.set_mode((xSize,ySize),pygame.RESIZABLE) #creates surface that will be flipped (mirror display)
     screen.fill(BLACK) #Make the window black
     done = False #Iterator boolean --> Tells programw when to terminate
     dummy = False #Very important bool for mouse manipulation
+    print("Beginning loop")
     while not done:
 #	a = time.time()
 #	if(time.time()-a > 60):
@@ -125,6 +165,18 @@ def hand_tracker():
         _,back = cv2.threshold(depth, 900, 255, cv2.THRESH_BINARY_INV) #Threshold the background in order to have an outlined background and segmented foreground
         blobData = BlobAnalysis(depthThresh) #Creates blobData object using BlobAnalysis class
         blobDataBack = BlobAnalysis(back) #Creates blobDataBack object using BlobAnalysis class
+
+        #moves[2] = depth
+
+                # draw the pixels
+        depth2 = np.rot90(get_depth()[0]) # get the depth readinngs from the camera
+        pixels = gamma[depth2] # the colour pixels are the depth readings overlayed onto the gamma table
+        temp_surface = pygame.Surface(disp_size)
+        pygame.surfarray.blit_array(temp_surface, pixels)
+        pygame.transform.scale(temp_surface, disp_size, screen)
+        screenFlipped = pygame.transform.flip(screen,1,0) #Flips the screen so that it is a mirror display
+        screen.blit(screenFlipped,(0,0)) #Updates the main screen --> screen
+        pygame.display.flip()
         
         for cont in blobDataBack.contours: #Iterates through contours in the background
             pygame.draw.lines(screen,YELLOW,True,cont,3) #Colors the binary boundaries of the background yellow
@@ -136,6 +188,7 @@ def hand_tracker():
             for tips in blobData.cHull[i]: #Iterates through the verticies of the convex hull for each blob
                 pygame.draw.circle(screen,PURPLE,tips,5) #Draws the vertices purple
         
+
         """
         #Drawing Loop
         #This draws on the screen lines from the centroids
@@ -145,7 +198,7 @@ def hand_tracker():
         """
         
         pygame.display.set_caption('Kinect Tracking') #Makes the caption of the pygame screen 'Kinect Tracking'
-        del depth #Deletes depth --> opencv memory issue
+        #del depth #Deletes depth --> opencv memory issue
         screenFlipped = pygame.transform.flip(screen,1,0) #Flips the screen so that it is a mirror display
         screen.blit(screenFlipped,(0,0)) #Updates the main screen --> screen
         pygame.display.flip() #Updates everything on the window
@@ -155,17 +208,29 @@ def hand_tracker():
             centroidX = blobData.centroid[0][0]
             centroidY = blobData.centroid[0][1]
             if dummy:
-
+                #moves[2] = PyArray_GETPTR2(depth, centroidX, centroidY)
+                depthVal = depth[centroidX][centroidY]
+                print(depthVal)
+                if depthVal != 2047.0:
+                    print("VALID")
                 #mousePtr = display.Display().screen().root.query_pointer()._data #Gets current mouse attributes
                 dX = centroidX - strX #Finds the change in X
                 dY = strY - centroidY #Finds the change in Y
                 if abs(dX) > 1: #If there was a change in X greater than 1...
                     #mouseX = mousePtr["root_x"] - 2*dX #New X coordinate of mouse
-                    moves[0] += dX
+                    moves[0] = dX
+                else: 
+                    moves[0] = 0
                 if abs(dY) > 1: #If there was a change in Y greater than 1...
                     #mouseY = mousePtr["root_y"] - 2*dY #New Y coordinate of mouse
-                    moves[1] += dY
+                    moves[1] = dY
+                else:
+                    moves[1] = 0
+                #print("This is before the pipe write")
                 pipe.write(moves, "/tmp/kinect")
+                #print(PyArray.PyArray_GETPTR2(depth, centroidX, centroidY))
+                del depth
+                #print("Moves are supposed to be here")
                 print(moves)
                 #move_mouse(mouseX,mouseY) #Moves mouse to new location
                 strX = centroidX #Makes the new starting X of mouse to current X of newest centroid
@@ -184,7 +249,10 @@ def hand_tracker():
                 done = True
         time.sleep(1/60)
 
+hand_tracker()
+
 try: #Kinect may not be plugged in --> weird erros
+    print("Attempting to run")
     hand_tracker()
 except: #Lets the libfreenect errors be shown instead of python ones
     pass
