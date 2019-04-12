@@ -162,8 +162,8 @@ def hand_tracker():
         screen.fill(BLACK) #Make the window black
         (depth,_) = get_depth() #Get the depth from the kinect 
         depth = depth.astype(np.float32) #Convert the depth to a 32 bit float
-        _,depthThresh = cv2.threshold(depth, 600, 255, cv2.THRESH_BINARY_INV) #Threshold the depth for a binary image. Thresholded at 600 arbitary units
-        _,back = cv2.threshold(depth, 900, 255, cv2.THRESH_BINARY_INV) #Threshold the background in order to have an outlined background and segmented foreground
+        _,depthThresh = cv2.threshold(depth, 800, 255, cv2.THRESH_BINARY_INV) #Threshold the depth for a binary image. Thresholded at 600 arbitary units
+        _,back = cv2.threshold(depth, 1000, 255, cv2.THRESH_BINARY_INV) #Threshold the background in order to have an outlined background and segmented foreground
         blobData = BlobAnalysis(depthThresh) #Creates blobData object using BlobAnalysis class
         blobDataBack = BlobAnalysis(back) #Creates blobDataBack object using BlobAnalysis class
 
@@ -210,10 +210,11 @@ def hand_tracker():
             centroidY = blobData.centroid[0][1]
             if dummy:
                 #moves[2] = PyArray_GETPTR2(depth, centroidX, centroidY)
-                depthVal = depth[centroidX][centroidY]
-                print(depthVal)
+                #print(abs(640-centroidX))
+                #print(centroidY)
+                depthVal = depth2[abs(640-centroidX)][centroidY]
                 if depthVal != 2047.0:
-                    print("VALID")
+                    moves[2] = depthVal-750
                 #mousePtr = display.Display().screen().root.query_pointer()._data #Gets current mouse attributes
                 dX = centroidX - strX #Finds the change in X
                 dY = strY - centroidY #Finds the change in Y
@@ -249,8 +250,6 @@ def hand_tracker():
             if e.type is pygame.QUIT: #If the close button is pressed, the while loop ends
                 done = True
         time.sleep(1/60)
-
-hand_tracker()
 
 try: #Kinect may not be plugged in --> weird erros
     print("Attempting to run")
