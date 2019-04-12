@@ -158,6 +158,7 @@ def hand_tracker():
 #	a = time.time()
 #	if(time.time()-a > 60):
 #	    subprocess.call("pkill -f handTracking.py",shell=True)
+
         screen.fill(BLACK) #Make the window black
         (depth,_) = get_depth() #Get the depth from the kinect 
         depth = depth.astype(np.float32) #Convert the depth to a 32 bit float
