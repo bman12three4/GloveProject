@@ -10,7 +10,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Threading;
 
-public class NewBehaviourScript : MonoBehaviour
+public class PaintbrushController : MonoBehaviour
 {
 
     NamedPipeClientStream client;
