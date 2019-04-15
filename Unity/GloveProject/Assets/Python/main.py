@@ -16,12 +16,8 @@ def getScaledChannel(channel):
 
 
 
-print("Running")
-
-
 while (True):
 
-    print("Please")
 
     # Set the first joints to all be the same angle
     data[0] = getScaledChannel(1)
@@ -47,7 +43,6 @@ while (True):
 
     #subprocess.Popen("python Unity/GloveProject/Assets/Python/handTracking.py ",shell=False)
     kinectString = pipe.read("/tmp/kinect").split(",")
-    print(kinectString)
 
     if kinectString[0]:
         data[16] = int(kinectString[0])
@@ -56,4 +51,5 @@ while (True):
 
     print(data)
     pipe.write(data, "/tmp/glove")
+    pipe.write(data, "/tmp/canvas") #this is a hack
     time.sleep(1/60)

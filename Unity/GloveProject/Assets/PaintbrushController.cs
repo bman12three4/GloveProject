@@ -35,8 +35,8 @@ public class PaintbrushController : MonoBehaviour
             String[] values = line.Split(',');
 
 
-            float depth = -float.Parse(values[18]) / 10;
-            transform.Translate(-float.Parse(values[16]) / 10, float.Parse(values[17]) / 10, 0);
+            float depth = float.Parse(values[18]) / 2;
+            transform.Translate(-float.Parse(values[16]) / 2, float.Parse(values[17]) / 2, 0);
             transform.position = new Vector3(transform.position.x, transform.position.y, depth);
 
         }
