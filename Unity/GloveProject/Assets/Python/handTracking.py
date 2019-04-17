@@ -1,6 +1,8 @@
 from freenect import sync_get_depth as get_depth #Uses freenect to get depth information from the Kinect
+from freenect import sync_get_video as get_video #Also uses freenect to get the color info
 import numpy as np #Imports NumPy
 import cv,cv2 #Uses both of cv and cv2
+import math
 import pygame #Uses pygame
 print ("Pygame init")
 #The libaries below are used for mouse manipulation
@@ -148,6 +150,8 @@ def hand_tracker():
     pygame.init() #Initiates pygame
     xSize,ySize = 640,480 #Sets size of window
     disp_size = (640, 480)
+    radius = 1.8018018018018018
+    ksize = int(6 * round(radius) + 1)
     screen = pygame.display.set_mode((xSize,ySize),pygame.RESIZABLE) #creates main surface
     screenFlipped = pygame.display.set_mode((xSize,ySize),pygame.RESIZABLE) #creates surface that will be flipped (mirror display)
     screen.fill(BLACK) #Make the window black
@@ -162,9 +166,29 @@ def hand_tracker():
         screen.fill(BLACK) #Make the window black
         (depth,_) = get_depth() #Get the depth from the kinect 
         depth = depth.astype(np.float32) #Convert the depth to a 32 bit float
-        _,depthThresh = cv2.threshold(depth, 800, 255, cv2.THRESH_BINARY_INV) #Threshold the depth for a binary image. Thresholded at 600 arbitary units
+        _,depthThresh = cv2.threshold(depth, 800, 255, cv2.THRESH_BINARY_INV) #Threshold the depth for a binary image. Thresholded at 800 arbitary units
         _,back = cv2.threshold(depth, 1000, 255, cv2.THRESH_BINARY_INV) #Threshold the background in order to have an outlined background and segmented foreground
-        blobData = BlobAnalysis(depthThresh) #Creates blobData object using BlobAnalysis class
+
+        '''
+            Okay so right now  it just looks at the depth data to find the hand, which
+            kind of works but there are a few problems. if we could use the color data,
+            then we could make sure that we only choose something that is both black
+            and in the depth range, so that it does not track your hand or shirt or
+            something. To do this it first uses the color data to find everything that
+            is black and uses  that  to create a mask which it then puts over the existing
+            depth data so that anything that is not black doesn't matter. 
+        '''
+
+        (color,_) = get_video # Get color frame from kinect
+        colorSized = cv2.resize(color,640, 480, 0, 0, cv2.INTER_CUBIC) # resizes the image to the size of the depth image
+        colorBlur = cv2.GaussianBlur(colorSized, (ksize, ksize), round(radius)) # Blurs the image  to reduce noise
+        colorFiltered = cv2.inRange(cv2.cvtColor(colorBlur, cv2.COLOR_BGR2HSV), (0, 0, 0),  (180, 180, 50)) # Runs an HSV filter to get only black pixels
+
+        depthMasked = cv2.bitwise_and(colorFiltered, depthThresh) # ands the two images so only the pixels that are black in the color image will stay
+    
+        blobData = BlobAnalysis(depthMasked) # Create blobData but with the masked image instead
+
+        #blobData = BlobAnalysis(depthThresh) #Creates blobData object using BlobAnalysis class
         blobDataBack = BlobAnalysis(back) #Creates blobDataBack object using BlobAnalysis class
 
         #moves[2] = depth
