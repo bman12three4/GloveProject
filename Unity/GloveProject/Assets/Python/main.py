@@ -1,6 +1,7 @@
 import time
 import subprocess
 import AD7490
+import os
 from pipes import Pipe
 
 
@@ -9,6 +10,7 @@ pipe = Pipe()
 data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 adc = AD7490.adc()
+
 
 
 def getScaledChannel(channel):

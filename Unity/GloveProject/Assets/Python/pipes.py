@@ -5,6 +5,22 @@ class Pipe():
     #Location of the pipe
     WRPATH = "/tmp/glove"
     RDPATH = "/tmp/kinect"
+
+    try:
+        os.mkfifo('/tmp/glove')
+    except:
+        pass
+
+    try:
+        os.mkfifo('/tmp/kinect')
+    except:
+        pass
+
+
+    try:
+        os.mkfifo('/tmp/canvas')
+    except:
+        pass
     
     #The write funcion writes the values in the array to the pipe with commas delimiting.
 
