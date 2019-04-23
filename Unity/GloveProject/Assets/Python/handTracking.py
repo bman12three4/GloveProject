@@ -21,7 +21,6 @@ pipe = Pipe()
 
 moves = [0, 0, 0]
 
-
 #userName = "unknown"
 constList = lambda length, val: [val for _ in range(length)] #Gives a list of size length filled with the variable val. length is a list and val is dynamic
 
@@ -166,8 +165,9 @@ def hand_tracker():
         screen.fill(BLACK) #Make the window black
         (depth,_) = get_depth() #Get the depth from the kinect 
         depth = depth.astype(np.float32) #Convert the depth to a 32 bit float
-        _,depthThresh = cv2.threshold(depth, 800, 255, cv2.THRESH_BINARY_INV) #Threshold the depth for a binary image. Thresholded at 800 arbitary units
-        _,back = cv2.threshold(depth, 1000, 255, cv2.THRESH_BINARY_INV) #Threshold the background in order to have an outlined background and segmented foreground
+        depth = cv2.resize(depth, disp_size, 0, 0, cv2.INTER_CUBIC)
+        _,depthThresh = cv2.threshold(depth, 900, 255, cv2.THRESH_BINARY_INV) #Threshold the depth for a binary image. Thresholded at 800 arbitary units
+        _,back = cv2.threshold(depth, 1600, 255, cv2.THRESH_BINARY_INV) #Threshold the background in order to have an outlined background and segmented foreground
 
         '''
             Okay so right now  it just looks at the depth data to find the hand, which
@@ -179,16 +179,14 @@ def hand_tracker():
             depth data so that anything that is not black doesn't matter. 
         '''
 
-        (color,_) = get_video # Get color frame from kinect
-        colorSized = cv2.resize(color,640, 480, 0, 0, cv2.INTER_CUBIC) # resizes the image to the size of the depth image
+        (color,_) = get_video() # Get color frame from kinect
+        colorSized = cv2.resize(color, disp_size, 0, 0, cv2.INTER_CUBIC) # resizes the image to the size of the depth image
         colorBlur = cv2.GaussianBlur(colorSized, (ksize, ksize), round(radius)) # Blurs the image  to reduce noise
-        colorFiltered = cv2.inRange(cv2.cvtColor(colorBlur, cv2.COLOR_BGR2HSV), (0, 0, 0),  (180, 180, 50)) # Runs an HSV filter to get only black pixels
-
-        depthMasked = cv2.bitwise_and(colorFiltered, depthThresh) # ands the two images so only the pixels that are black in the color image will stay
-    
+        colorFiltered = cv2.inRange(cv2.cvtColor(colorBlur, cv2.COLOR_BGR2HSV), (0, 0, 0),  (180, 180, 30)) # Runs an HSV filter to get only black pixels
+        
+        depthMasked = cv2.bitwise_and(depthThresh, depthThresh, mask=colorFiltered) # ands the two images so only the pixels that are black in the color image will stay
+        
         blobData = BlobAnalysis(depthMasked) # Create blobData but with the masked image instead
-
-        #blobData = BlobAnalysis(depthThresh) #Creates blobData object using BlobAnalysis class
         blobDataBack = BlobAnalysis(back) #Creates blobDataBack object using BlobAnalysis class
 
         #moves[2] = depth
@@ -203,6 +201,8 @@ def hand_tracker():
         screen.blit(screenFlipped,(0,0)) #Updates the main screen --> screen
         pygame.display.flip()
         
+        
+
         for cont in blobDataBack.contours: #Iterates through contours in the background
             pygame.draw.lines(screen,YELLOW,True,cont,3) #Colors the binary boundaries of the background yellow
         for i in range(blobData.counter): #Iterate from 0 to the number of blobs minus 1
