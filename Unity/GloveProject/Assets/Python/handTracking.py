@@ -184,12 +184,13 @@ def hand_tracker():
         colorBlur = cv2.GaussianBlur(colorSized, (ksize, ksize), round(radius)) # Blurs the image  to reduce noise
         colorFiltered = cv2.inRange(cv2.cvtColor(colorBlur, cv2.COLOR_BGR2HSV), (0, 0, 0),  (180, 180, 30)) # Runs an HSV filter to get only black pixels
         
+
+        red1 = cv2.inRange(cv2.cvtColor(colorSized, cv2.COLOR_BGR2HSV), (0, 0, 0),  (180, 180, 30))
+
         depthMasked = cv2.bitwise_and(depthThresh, depthThresh, mask=colorFiltered) # ands the two images so only the pixels that are black in the color image will stay
         
         blobData = BlobAnalysis(depthMasked) # Create blobData but with the masked image instead
         blobDataBack = BlobAnalysis(back) #Creates blobDataBack object using BlobAnalysis class
-
-        #moves[2] = depth
 
                 # draw the pixels
         depth2 = np.rot90(get_depth()[0]) # get the depth readinngs from the camera
@@ -223,7 +224,7 @@ def hand_tracker():
         """
         
         pygame.display.set_caption('Kinect Tracking') #Makes the caption of the pygame screen 'Kinect Tracking'
-        #del depth #Deletes depth --> opencv memory issue
+        del depth #Deletes depth --> opencv memory issue
         screenFlipped = pygame.transform.flip(screen,1,0) #Flips the screen so that it is a mirror display
         screen.blit(screenFlipped,(0,0)) #Updates the main screen --> screen
         pygame.display.flip() #Updates everything on the window
@@ -232,40 +233,40 @@ def hand_tracker():
         try:
             centroidX = blobData.centroid[0][0]
             centroidY = blobData.centroid[0][1]
+            centroidZ = depth2[abs(640-centroidX)][centroidY]
+            del depth2
             if dummy:
-                #moves[2] = PyArray_GETPTR2(depth, centroidX, centroidY)
-                #print(abs(640-centroidX))
-                #print(centroidY)
-                depthVal = depth2[abs(640-centroidX)][centroidY]
-                if depthVal != 2047.0:
-                    moves[2] = depthVal-750
-                #mousePtr = display.Display().screen().root.query_pointer()._data #Gets current mouse attributes
                 dX = centroidX - strX #Finds the change in X
                 dY = strY - centroidY #Finds the change in Y
+                dZ = centroidZ - strZ #Finds the change in Z
+
                 if abs(dX) > 1: #If there was a change in X greater than 1...
-                    #mouseX = mousePtr["root_x"] - 2*dX #New X coordinate of mouse
                     moves[0] = dX
                 else: 
                     moves[0] = 0
+
                 if abs(dY) > 1: #If there was a change in Y greater than 1...
-                    #mouseY = mousePtr["root_y"] - 2*dY #New Y coordinate of mouse
                     moves[1] = dY
                 else:
                     moves[1] = 0
-                #print("This is before the pipe write")
+
+                if abs(dZ) > 1:
+                    moves[2] = dZ
+                else:
+                    moves[2] = 0
+
                 pipe.write(moves, "/tmp/kinect")
-                #print(PyArray.PyArray_GETPTR2(depth, centroidX, centroidY))
                 del depth
-                #print("Moves are supposed to be here")
                 print(moves)
-                #move_mouse(mouseX,mouseY) #Moves mouse to new location
-                strX = centroidX #Makes the new starting X of mouse to current X of newest centroid
-                strY = centroidY #Makes the new starting Y of mouse to current Y of newest centroid
+                strX = centroidX #Makes the new starting X of glove to current X of newest centroid
+                strY = centroidY #Makes the new starting Y of glove to current Y of newest centroid
+                strZ = centroidZ #Makes the new starting Z of glove to current Z of newest centroid
                 cArea = cacheAppendMean(cHullAreaCache,blobData.cHullArea[0]) #Normalizes (gets rid of noise) in the convex hull area
                 areaRatio = cacheAppendMean(areaRatioCache, blobData.contourArea[0]/cArea) #Normalizes the ratio between the contour area and convex hull area
             else:
                 strX = centroidX #Initializes the starting X
                 strY = centroidY #Initializes the starting Y
+                strZ = centroidZ #Initializes the starting Z
                 dummy = True #Lets the function continue to the first part of the if statement
         except: #There may be no centroids and therefore blobData.centroid[0] will be out of range
             dummy = False #Waits for a new starting point

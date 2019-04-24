@@ -53,10 +53,7 @@ public class PipeController : MonoBehaviour
                 if (i <4)
                     this.gameObject.transform.GetChild(i).GetChild(0).GetChild(0).localEulerAngles = new Vector3(float.Parse(values[3*i +2]), 0, 0);
             }
-
-            float depth = -float.Parse(values[18])/10;
-            transform.Translate(-float.Parse(values[16])/10, float.Parse(values[17])/10, 0);
-            transform.position = new Vector3(transform.position.x, transform.position.y, depth);
+            transform.Translate(-float.Parse(values[16])/10, float.Parse(values[17])/10, -float.Parse(values[18])/10);
 
         }
 
