@@ -233,12 +233,18 @@ def hand_tracker():
         try:
             centroidX = blobData.centroid[0][0]
             centroidY = blobData.centroid[0][1]
-            centroidZ = depth2[abs(640-centroidX)][centroidY]
+            centroidZ = abs(depth2[abs(640-centroidX)][centroidY])
             del depth2
             if dummy:
                 dX = centroidX - strX #Finds the change in X
                 dY = strY - centroidY #Finds the change in Y
-                dZ = centroidZ - strZ #Finds the change in Z
+                if strZ >= centroidZ:
+                    dZ = strZ - centroidZ #Finds the change in Z
+                else:
+                    dZ = (strZ-centroidZ)-65536
+                print(strZ)
+                print(centroidZ)
+                print(dZ)
 
                 if abs(dX) > 1: #If there was a change in X greater than 1...
                     moves[0] = dX

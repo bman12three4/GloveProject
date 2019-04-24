@@ -2,6 +2,8 @@ import time, os, errno
 
 class Pipe():
 
+    print("making pipes")
+
     #Location of the pipe
     WRPATH = "/tmp/glove"
     RDPATH = "/tmp/kinect"
