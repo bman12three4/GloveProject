@@ -34,7 +34,7 @@ public class PaintbrushController : MonoBehaviour
         {
             String[] values = line.Split(',');
 
-            transform.Translate(-float.Parse(values[16]) / 2, float.Parse(values[17]) / 2, float.Parse(values[18]) / 2 +20);
+            transform.Translate(-float.Parse(values[16]) / 2, float.Parse(values[17]) / 2, (float.Parse(values[18]) / 2));
 
         }
 

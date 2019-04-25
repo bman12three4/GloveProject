@@ -256,7 +256,7 @@ def hand_tracker():
                 else:
                     moves[1] = 0
 
-                if abs(dZ) > 1:
+                if abs(dZ) < 10:
                     moves[2] = dZ
                 else:
                     moves[2] = 0
