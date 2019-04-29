@@ -19,7 +19,7 @@ public class ColorWheel : MonoBehaviour
             visible = !visible;
 
             if (visible){
-               transform.position = new Vector3(0F, 0F, -15.0F);
+               transform.position = new Vector3(0F, 0F, -20.0F);
             } else {
                 transform.position = new Vector3(0F, 0F, -550.0F);
             }

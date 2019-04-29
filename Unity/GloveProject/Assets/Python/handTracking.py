@@ -166,8 +166,8 @@ def hand_tracker():
         (depth,_) = get_depth() #Get the depth from the kinect 
         depth = depth.astype(np.float32) #Convert the depth to a 32 bit float
         depth = cv2.resize(depth, disp_size, 0, 0, cv2.INTER_CUBIC)
-        _,depthThresh = cv2.threshold(depth, 900, 255, cv2.THRESH_BINARY_INV) #Threshold the depth for a binary image. Thresholded at 800 arbitary units
-        _,back = cv2.threshold(depth, 1600, 255, cv2.THRESH_BINARY_INV) #Threshold the background in order to have an outlined background and segmented foreground
+        _,depthThresh = cv2.threshold(depth, 700, 255, cv2.THRESH_BINARY_INV) #Threshold the depth for a binary image. Thresholded at 800 arbitary units
+        _,back = cv2.threshold(depth, 1000, 255, cv2.THRESH_BINARY_INV) #Threshold the background in order to have an outlined background and segmented foreground
 
         '''
             Okay so right now  it just looks at the depth data to find the hand, which
@@ -182,7 +182,7 @@ def hand_tracker():
         (color,_) = get_video() # Get color frame from kinect
         colorSized = cv2.resize(color, disp_size, 0, 0, cv2.INTER_CUBIC) # resizes the image to the size of the depth image
         colorBlur = cv2.GaussianBlur(colorSized, (ksize, ksize), round(radius)) # Blurs the image  to reduce noise
-        colorFiltered = cv2.inRange(cv2.cvtColor(colorBlur, cv2.COLOR_BGR2HSV), (0, 0, 0),  (180, 180, 30)) # Runs an HSV filter to get only black pixels
+        colorFiltered = cv2.inRange(cv2.cvtColor(colorBlur, cv2.COLOR_BGR2HSV), (0, 0, 0),  (180, 180, 50)) # Runs an HSV filter to get only black pixels
         
 
         red1 = cv2.inRange(cv2.cvtColor(colorSized, cv2.COLOR_BGR2HSV), (0, 0, 0),  (180, 180, 30))
@@ -233,7 +233,7 @@ def hand_tracker():
         try:
             centroidX = blobData.centroid[0][0]
             centroidY = blobData.centroid[0][1]
-            centroidZ = abs(depth2[abs(640-centroidX)][centroidY])
+            centroidZ = abs(depth2[abs(640-centroidX)][centroidY]) #TODO Change this to correct for spherical distortion (pythag + trig)
             del depth2
             if dummy:
                 dX = centroidX - strX #Finds the change in X
