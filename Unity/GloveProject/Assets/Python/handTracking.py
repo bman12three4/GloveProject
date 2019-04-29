@@ -234,16 +234,19 @@ def hand_tracker():
             centroidX = blobData.centroid[0][0]
             centroidY = blobData.centroid[0][1]
             centroidZ = abs(depth2[abs(640-centroidX)][centroidY])
+            dist = math.sqrt((centroidX * centroidX) + (centroidY + centroidY))
+            tdepth = math.sqrt((centroidZ * centroidZ) - (dist * dist))
+
             del depth2
             if dummy:
                 dX = centroidX - strX #Finds the change in X
                 dY = strY - centroidY #Finds the change in Y
-                if strZ >= centroidZ:
-                    dZ = strZ - centroidZ #Finds the change in Z
+                if strZ >= tdepth:
+                    dZ = strZ - tdepth #Finds the change in Z
                 else:
-                    dZ = (strZ-centroidZ)-65536
+                    dZ = (strZ-tdepth)-65536
                 print(strZ)
-                print(centroidZ)
+                print(tdepth)
                 print(dZ)
 
                 if abs(dX) > 1: #If there was a change in X greater than 1...
@@ -266,7 +269,7 @@ def hand_tracker():
                 print(moves)
                 strX = centroidX #Makes the new starting X of glove to current X of newest centroid
                 strY = centroidY #Makes the new starting Y of glove to current Y of newest centroid
-                strZ = centroidZ #Makes the new starting Z of glove to current Z of newest centroid
+                strZ = tdepth #Makes the new starting Z of glove to current Z of newest centroid
                 cArea = cacheAppendMean(cHullAreaCache,blobData.cHullArea[0]) #Normalizes (gets rid of noise) in the convex hull area
                 areaRatio = cacheAppendMean(areaRatioCache, blobData.contourArea[0]/cArea) #Normalizes the ratio between the contour area and convex hull area
             else:
