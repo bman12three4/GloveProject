@@ -27,17 +27,7 @@ public class MineController : MonoBehaviour
     void Update()
     {
 
-        if (isMine)
-        {
-            //updateMaterial();
-        }
-
-        //number = getNumber ();
-        if (number == 0)
-        {
-            //Destroy (this.gameObject);	
-        }
-
+        // If invisible, disable collider and renderer so you can't see or interact, but other mines can.
         if (invisible)
         {
             this.GetComponent<Renderer>().enabled = false;
@@ -45,31 +35,31 @@ public class MineController : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider col)
+    void OnTriggerEnter(Collider col)               
     {
-        if (col.gameObject.name == "ray(Clone)")
+        if (col.gameObject.GetComponent<PlayerController>().clear)   
         {
 
-            if (!flagged)
+            if (!flagged)                           
             {
-                if (isMine)
+                if (isMine)                         
                 {
                     this.GetComponent<Renderer>().material = Resources.Load<Material>("numbers/Materials/mine");
-                    Application.Quit();
+                    Application.Quit();          
                 }
                 else
                 {
-                    getNumber();
-                    updateMaterial();
+                    getNumber();                    
+                    updateMaterial();              
                 }
             }
 
         }
-        else if (col.gameObject.name == "flagray(Clone)")
-        {
-            if (!flagged)
+        else if (col.gameObject.GetComponent<PlayerController>().flag)
+        {                                          
+            if (!flagged)                           
             {
-                checkd = true;
+                //checkd = true;
                 flagged = true;
                 this.GetComponent<Renderer>().material = Resources.Load<Material>("numbers/Materials/flag");
             }
@@ -85,19 +75,6 @@ public class MineController : MonoBehaviour
 
     public void getNumber()
     {
-        //Debug.Log("This is the value of false [" + false + "] and this is the value of checkd [" + !checkd + "]");
-
-        /* 
-
-        if (!transform.parent.GetComponent<CreateMines>().mines[loc[0], loc[1], loc[2] + 1].GetComponent<MineController>().checkd)
-        {
-			Debug.Log("The guy behind me has not been checked");
-        } else {
-			Debug.Log("The guy behind me WAS checked");
-		}
-
-		*/
-
         if (!checkd)
         {
 
