@@ -234,8 +234,18 @@ def hand_tracker():
             centroidX = blobData.centroid[0][0]
             centroidY = blobData.centroid[0][1]
             centroidZ = abs(depth2[abs(640-centroidX)][centroidY])
-            dist = math.sqrt((centroidX * centroidX) + (centroidY + centroidY))
-            tdepth = math.sqrt((centroidZ * centroidZ) - (dist * dist))
+
+            #dist = math.sqrt(((centroidX-320) * (centroidX-320)) + ((centroidY-240) + (centroidY-240)))
+
+            scaledZ = centroidZ
+
+           # print(scaledZ)   #giving up on this for now, the problem seems to be that there is no correleation
+            #print(centroidX) #between the coordinates and the depth info, and they need to be the same unites for this math
+
+
+            #tdepth = math.sqrt((scaledZ * scaledZ) - (dist * dist))
+
+            tdepth = centroidZ
 
             del depth2
             if dummy:
@@ -245,9 +255,9 @@ def hand_tracker():
                     dZ = strZ - tdepth #Finds the change in Z
                 else:
                     dZ = (strZ-tdepth)-65536
-                print(strZ)
-                print(tdepth)
-                print(dZ)
+                #print(strZ)
+                #print(tdepth)
+                #print(dZ)
 
                 if abs(dX) > 1: #If there was a change in X greater than 1...
                     moves[0] = dX
