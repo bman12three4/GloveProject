@@ -26,39 +26,6 @@ constList = lambda length, val: [val for _ in range(length)] #Gives a list of si
 
 print("all init")
 
-def make_gamma():
-    """
-    Create a gamma table
-    """
-    num_pix = 2048 # there's 2048 different possible depth values
-    npf = float(num_pix)
-    _gamma = np.empty((num_pix, 3), dtype=np.uint16)
-    for i in xrange(num_pix):
-        v = i / npf
-        v = pow(v, 3) * 6
-        pval = int(v * 6 * 256)
-        lb = pval & 0xff
-        pval >>= 8
-        if pval == 0:
-            a = np.array([255, 255 - lb, 255 - lb], dtype=np.uint8)
-        elif pval == 1:
-            a = np.array([255, lb, 0], dtype=np.uint8)
-        elif pval == 2:
-            a = np.array([255 - lb, lb, 0], dtype=np.uint8)
-        elif pval == 3:
-            a = np.array([255 - lb, 255, 0], dtype=np.uint8)
-        elif pval == 4:
-            a = np.array([0, 255 - lb, 255], dtype=np.uint8)
-        elif pval == 5:
-            a = np.array([0, 0, 255 - lb], dtype=np.uint8)
-        else:
-            a = np.array([0, 0, 0], dtype=np.uint8)
-
-        _gamma[i] = a
-    return _gamma
-
-
-gamma = make_gamma()
 
 """
 This class is a less extensive form of regionprops() developed by MATLAB. It finds properties of contours and sets them to fields
@@ -140,9 +107,6 @@ def hand_tracker():
     disp_size = (640, 480)
     radius = 25
     ksize = int(6 * round(radius) + 1)
-    screen = pygame.display.set_mode((xSize,ySize),pygame.RESIZABLE) #creates main surface
-    screenFlipped = pygame.display.set_mode((xSize,ySize),pygame.RESIZABLE) #creates surface that will be flipped (mirror display)
-    screen.fill(BLACK) #Make the window black
     done = False #Iterator boolean --> Tells programw when to terminate
     dummy = False #Very important bool for mouse manipulation
     print("Beginning loop")
@@ -150,13 +114,11 @@ def hand_tracker():
 #	a = time.time()
 #	if(time.time()-a > 60):
 #	    subprocess.call("pkill -f handTracking.py",shell=True)
-
-        screen.fill(BLACK) #Make the window black
         (depth,_) = get_depth() #Get the depth from the kinect 
         depth = depth.astype(np.float32) #Convert the depth to a 32 bit float
         depth = cv2.resize(depth, disp_size, 0, 0, cv2.INTER_CUBIC)
         _,depthThresh = cv2.threshold(depth, 750, 255, cv2.THRESH_BINARY_INV) #Threshold the depth for a binary image. Thresholded at 800 arbitary units
-        _,back = cv2.threshold(depth, 1000, 255, cv2.THRESH_BINARY_INV) #Threshold the background in order to have an outlined background and segmented foreground
+        #_,back = cv2.threshold(depth, 1000, 255, cv2.THRESH_BINARY_INV) #Threshold the background in order to have an outlined background and segmented foreground
 
         #print("Old code done")
 
@@ -183,47 +145,13 @@ def hand_tracker():
 
         depthMasked = cv2.bitwise_and(depthThresh, depthThresh, mask=colorSized) # ands the two images so only the pixels that are black in the color image will stay
         
+        #print("new Code done")
+
         blobData = BlobAnalysis(depthMasked) # Create blobData but with the masked image instead
-        blobDataBack = BlobAnalysis(back) #Creates blobDataBack object using BlobAnalysis class
+        #blobDataBack = BlobAnalysis(back) #Creates blobDataBack object using BlobAnalysis class
 
-                # draw the pixels
         depth2 = np.rot90(get_depth()[0]) # get the depth readinngs from the camera
-        pixels = gamma[depth2] # the colour pixels are the depth readings overlayed onto the gamma table
-        temp_surface = pygame.Surface(disp_size)
-        pygame.surfarray.blit_array(temp_surface, pixels)
-        pygame.transform.scale(temp_surface, disp_size, screen)
-        screenFlipped = pygame.transform.flip(screen,1,0) #Flips the screen so that it is a mirror display
-        screen.blit(screenFlipped,(0,0)) #Updates the main screen --> screen
-        pygame.display.flip()
-
-        #print("Display done")
         
-        
-
-        for cont in blobDataBack.contours: #Iterates through contours in the background
-            pygame.draw.lines(screen,YELLOW,True,cont,3) #Colors the binary boundaries of the background yellow
-        for i in range(blobData.counter): #Iterate from 0 to the number of blobs minus 1
-            pygame.draw.circle(screen,BLUE,blobData.centroid[i],10) #Draws a blue circle at each centroid
-            centroidList.append(blobData.centroid[i]) #Adds the centroid tuple to the centroidList --> used for drawing
-            pygame.draw.lines(screen,RED,True,blobData.cHull[i],3) #Draws the convex hull for each blob
-            pygame.draw.lines(screen,GREEN,True,blobData.contours[i],3) #Draws the contour of each blob
-            for tips in blobData.cHull[i]: #Iterates through the verticies of the convex hull for each blob
-                pygame.draw.circle(screen,PURPLE,tips,5) #Draws the vertices purple
-        
-
-        """
-        #Drawing Loop
-        #This draws on the screen lines from the centroids
-        #Possible exploration into gesture recognition :D
-        for cent in centroidList:
-            pygame.draw.circle(screen,BLUE,cent,10)
-        """
-        
-        pygame.display.set_caption('Kinect Tracking') #Makes the caption of the pygame screen 'Kinect Tracking'
-        del depth #Deletes depth --> opencv memory issue
-        screenFlipped = pygame.transform.flip(screen,1,0) #Flips the screen so that it is a mirror display
-        screen.blit(screenFlipped,(0,0)) #Updates the main screen --> screen
-        pygame.display.flip() #Updates everything on the window
         
         #Mouse Try statement
         try:
@@ -241,9 +169,9 @@ def hand_tracker():
 
             #tdepth = math.sqrt((scaledZ * scaledZ) - (dist * dist))
 
-            tdepth = centroidZ
-
             del depth2
+
+            tdepth = centroidZ
             if dummy:
                 dX = centroidX - strX #Finds the change in X
                 dY = strY - centroidY #Finds the change in Y
@@ -251,9 +179,10 @@ def hand_tracker():
                     dZ = strZ - tdepth #Finds the change in Z
                 else:
                     dZ = (strZ-tdepth)-65536
-                #print(strZ)
-                #print(tdepth)
-                #print(dZ)
+                print(strZ)
+                print(tdepth)
+                print(dZ)
+
 
                 if abs(dX) > 1: #If there was a change in X greater than 1...
                     moves[0] = dX
@@ -265,14 +194,13 @@ def hand_tracker():
                 else:
                     moves[1] = 0
 
-                if abs(dZ) < 10:
+                if abs(dZ) >1:
                     moves[2] = dZ
                 else:
                     moves[2] = 0
 
                 pipe.write(moves, "/tmp/kinect")
                 del depth
-                print(moves)
                 strX = centroidX #Makes the new starting X of glove to current X of newest centroid
                 strY = centroidY #Makes the new starting Y of glove to current Y of newest centroid
                 strZ = tdepth #Makes the new starting Z of glove to current Z of newest centroid
@@ -283,7 +211,7 @@ def hand_tracker():
                 strY = centroidY #Initializes the starting Y
                 strZ = centroidZ #Initializes the starting Z
                 dummy = True #Lets the function continue to the first part of the if statement
-        except: #There may be no centroids and therefore blobData.centroid[0] will be out of range
+        except Exception as e: #There may be no centroids and therefore blobData.centroid[0] will be out of range
             dummy = False #Waits for a new starting point
             
         for e in pygame.event.get(): #Itertates through current events
