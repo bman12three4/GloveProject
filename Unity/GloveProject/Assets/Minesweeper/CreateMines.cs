@@ -10,6 +10,8 @@ public class CreateMines : MonoBehaviour
 
     public int numMines = 4;
 
+    public bool lose = false;
+
     // Use this for initialization
     void Start()
     {
