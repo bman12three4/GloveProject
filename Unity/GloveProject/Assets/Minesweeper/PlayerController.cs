@@ -15,12 +15,12 @@ public class PlayerController : MonoBehaviour
 
     NamedPipeClientStream client;
 
-    bool clear = false;
-    bool flag = false;
+    public bool clear = false;
+    public bool flag = false;
 
-    float xScale = 1.5f;
-    float yScale = 1.5f;
-    float zScale = 1.5f;
+    public float xScale = .5f;
+    public float yScale = .5f;
+    public float zScale = .5f;
 
     StreamReader reader;
 
@@ -43,23 +43,23 @@ public class PlayerController : MonoBehaviour
 
             transform.Translate((-float.Parse(values[16])) * xScale, float.Parse(values[17]) * yScale, float.Parse(values[18]) * zScale);
 
-            if (float.Parse(values[1]) < 50)
+
+            if (float.Parse(values[1]) < 50)// if the first finger is out
             {
-                if (float.Parse(values[4]) < 50 && float.Parse(values[7]) < 50)
+                if (float.Parse(values[4]) < 50 && float.Parse(values[7]) < 50) // if the second and third fingers are also out
+                {
+                    clear = false;
+                    flag = false;
+                } else {
+                    clear = false;
+                    flag = true;
+                }
+            } else {
+                if (float.Parse(values[4]) > 50 && float.Parse(values[7]) > 50) // if the second and third fingers are also out
                 {
                     clear = true;
                     flag = false;
                 }
-                else
-                {
-                    clear = false;
-                    flag = true;
-                }
-            }
-            else
-            {
-                clear = false;
-                flag = false;
             }
 
 
@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.R))
         {
-            transform.position = new Vector3(0, 0, 0);
+            transform.position = new Vector3(5, 3, -5);
         }
     }
 }

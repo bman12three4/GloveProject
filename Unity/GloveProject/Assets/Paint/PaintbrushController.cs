@@ -40,7 +40,7 @@ public class PaintbrushController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.R))
         {
-            transform.position = new Vector3(0, 0, 0);
+            transform.position = new Vector3(0, 0, 5);
         }
     }
 }

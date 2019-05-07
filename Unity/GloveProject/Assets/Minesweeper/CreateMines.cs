@@ -6,9 +6,9 @@ public class CreateMines : MonoBehaviour
 {
 
     public GameObject mine;
-    public GameObject[,] mines = new GameObject[8, 6];
+    public GameObject[,] mines = new GameObject[6, 4];
 
-    public int numMines = 8;
+    public int numMines = 4;
 
     // Use this for initialization
     void Start()
@@ -18,11 +18,12 @@ public class CreateMines : MonoBehaviour
 			Run through the array of mines and instantiate a new mine prefab at each idnex
 		 */
 
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 6; i++)
         {
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < 4; j++)
             {
                 mines[i, j] = Instantiate(mine, new Vector3(i * 2, j * 2), Quaternion.identity);	// Make the mines
+				mines[i, j].transform.eulerAngles = new Vector3(0, 90, 0);
                 mines[i, j].transform.parent = this.transform; // make this transform (mine-master) the parent of all mines, so they can access its arrays
                 int[] loc = { i, j };						   
                 mines[i, j].GetComponent<MineController>().loc = loc; // set the location of the mine, so it knows where it is in the array
@@ -68,8 +69,8 @@ public class CreateMines : MonoBehaviour
 	 */
     int[] rand()
     {
-        int x = Random.Range(0, 8);	
-        int y = Random.Range(0, 6);
+        int x = Random.Range(0, 6);	
+        int y = Random.Range(0, 4);
 
         int[] ret = { x, y };
         return ret;

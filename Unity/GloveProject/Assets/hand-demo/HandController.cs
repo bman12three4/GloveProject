@@ -10,7 +10,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Threading;
 
-public class PipeController : MonoBehaviour
+public class HandController : MonoBehaviour
 {
     NamedPipeClientStream client;
 
@@ -53,7 +53,8 @@ public class PipeController : MonoBehaviour
                 if (i <4)
                     this.gameObject.transform.GetChild(i).GetChild(0).GetChild(0).localEulerAngles = new Vector3(float.Parse(values[3*i +2]), 0, 0);
             }
-            transform.Translate(-float.Parse(values[16])/10, float.Parse(values[17])/10, -float.Parse(values[18])/10);
+            transform.Translate(-float.Parse(values[16])/10, float.Parse(values[17])/10, float.Parse(values[18])/10);
+            UnityEngine.Debug.Log(float.Parse(values[18])/10);
 
         }
 

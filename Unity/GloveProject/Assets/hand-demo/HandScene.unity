@@ -218,6 +218,7 @@ GameObject:
   - component: {fileID: 96523624}
   - component: {fileID: 96523623}
   - component: {fileID: 96523628}
+  - component: {fileID: 96523630}
   - component: {fileID: 96523629}
   - component: {fileID: 96523627}
   m_Layer: 0
@@ -335,9 +336,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 96523622}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4db32a1a9092547558d217cf3c1bb51d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &96523630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96523622}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92568341f3008c472b455bdc23522e8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &164308340
@@ -2018,7 +2031,7 @@ SpringJoint:
   m_ConnectedBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0.5, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -3.75, y: -1, z: 4.418005}
+  m_ConnectedAnchor: {x: -3.25, y: -1, z: 4.418005}
   serializedVersion: 2
   m_Spring: 10
   m_Damper: 5

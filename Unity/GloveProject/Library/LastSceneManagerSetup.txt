@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/HandScene.unity
+- path: Assets/Minesweeper/Minesweeper.unity
   isLoaded: 1
   isActive: 1
